@@ -87,7 +87,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Hira
 <div class="section-body">
 <div class="filter-bar">
 <label>二级部门筛选：</label>
-<select id="deptFilter" onchange="onFilterChange()"><option value="total">集团</option></select>
+<div class="dim-btns" id="deptBtns"></div>
 </div>
 <div class="charts-grid">
 <div class="chart-box"><h3 id="t1">绩效结果分布</h3><div class="chart-wrap"><canvas id="c1"></canvas></div></div>
@@ -120,7 +120,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Hira
 <div class="section-body">
 <div class="filter-bar">
 <label>二级部门筛选：</label>
-<select id="tblFilter" onchange="onTblFilter()"><option value="all">集团</option></select>
+<div class="dim-btns" id="tblBtns"></div>
 </div>
 <div class="detail-wrap">
 <table class="detail-tbl">
@@ -171,7 +171,7 @@ t.querySelector('span:last').textContent=t.classList.contains('open')?'收起部
 }
 
 function getData(name){return name==='total'?D.total:(D.departments.find(d=>d.name===name)||{}).summary||D.total;}
-function getLabel(name){return name==='total'?'集团':name;}
+function getLabel(name){return name==='total'?'全部':name;}
 
 function mkChart(id,type,labels,values,colors){
 const ctx=document.getElementById(id).getContext('2d');
@@ -212,13 +212,19 @@ document.getElementById('t4').textContent=lb+' - 离职原因分布';
 mkBar('c4',d.reasons.map(r=>r.name),d.reasons.map(r=>r.count),d.reasons.map(r=>r.pct),C.reason);
 }
 
-function onFilterChange(){const v=document.getElementById('deptFilter').value;updateCharts(v);renderKPI(getData(v));}
+function onFilterChange(v){updateCharts(v);renderKPI(getData(v));}
 
 function initFilters(){
-['deptFilter','tblFilter'].forEach(id=>{
-const sel=document.getElementById(id);
-D.departments.forEach(d=>{const o=document.createElement('option');o.value=d.name;o.textContent=d.name;sel.appendChild(o);});
-});
+// 图表区筛选按钮
+const dBtns=document.getElementById('deptBtns');
+dBtns.innerHTML='<button class="dim-btn active" data-val="total">全部</button>';
+D.departments.forEach(d=>{const b=document.createElement('button');b.className='dim-btn';b.setAttribute('data-val',d.name);b.textContent=d.name;dBtns.appendChild(b);});
+dBtns.addEventListener('click',function(e){if(e.target.classList.contains('dim-btn')){dBtns.querySelectorAll('.dim-btn').forEach(b=>b.classList.remove('active'));e.target.classList.add('active');onFilterChange(e.target.getAttribute('data-val'));}});
+// 明细表筛选按钮
+const tBtns=document.getElementById('tblBtns');
+tBtns.innerHTML='<button class="dim-btn active" data-val="all">全部</button>';
+D.departments.forEach(d=>{const b=document.createElement('button');b.className='dim-btn';b.setAttribute('data-val',d.name);b.textContent=d.name;tBtns.appendChild(b);});
+tBtns.addEventListener('click',function(e){if(e.target.classList.contains('dim-btn')){tBtns.querySelectorAll('.dim-btn').forEach(b=>b.classList.remove('active'));e.target.classList.add('active');onTblFilter(e.target.getAttribute('data-val'));}});
 }
 
 function rc(r){return r>=20?'rh':r>=10?'rm':'rl';}
@@ -256,7 +262,7 @@ rows.forEach(r=>{if(open)r.classList.remove('show');else r.classList.add('show')
 btn.classList.toggle('open');
 }
 
-function onTblFilter(){renderTable(document.getElementById('tblFilter').value);}
+function onTblFilter(v){renderTable(v);}
 
 // ===== 二级部门横向对比图表 =====
 const CROSS_DIM={
