@@ -153,7 +153,7 @@ const items=[
 {l:'26年离职人数',v:N(d.leave),s:'截至4月30日'},
 {l:'26年净增人数',v:(d.net>=0?'+':'')+N(d.net),s:'入职-离职-调出'},
 {l:'期末在职人数',v:N(d.end),s:'截至4月30日'},
-{l:'离职率',v:R(d.turnover_rate),s:'离职人数/(年初+入职)',red:false}
+{l:'离职率',v:R(d.turnover_rate),s:'26年离职/(26年离职+期末在职)',red:false}
 ];
 g.innerHTML=items.map(i=>'<div class="kpi-card"><div class="kpi-label">'+i.l+'</div><div class="kpi-value"'+(i.red?' style="background:none;-webkit-text-fill-color:#ef5350"':'')+'>'+i.v+'</div><div class="kpi-sub">'+i.s+'</div></div>').join('');
 }
