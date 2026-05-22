@@ -374,11 +374,16 @@ scale:2,
 useCORS:true,
 logging:false,
 onclone:function(clonedDoc){
-// html2canvas 瀵?CSS linear-gradient 娓叉煋鏈夊亸宸紝鎴浘鏃舵浛鎹负绾壊鑳屾櫙
-var h=clonedDoc.querySelector('.header');
-if(h)h.style.background='rgba(25,55,105,.75)';
+// html2canvas 涓嶆敮鎸?CSS 娓愬彉鑳屾櫙鍜?background-clip:text锛屾埅鍥炬椂鏇挎崲
+var h1=clonedDoc.querySelector('.header');
+if(h1)h1.style.background='rgba(25,55,105,.75)';
+var h1t=clonedDoc.querySelector('.header h1');
+if(h1t){h1t.style.background='none';h1t.style.webkitBackgroundClip='unset';h1t.style.webkitTextFillColor='#64b5f6';h1t.style.color='#64b5f6';}
 clonedDoc.querySelectorAll('.kpi-card').forEach(function(c){
 c.style.background='rgba(22,42,75,.55)';
+});
+clonedDoc.querySelectorAll('.kpi-value').forEach(function(v){
+v.style.background='none';v.style.webkitBackgroundClip='unset';v.style.webkitTextFillColor='#64b5f6';v.style.color='#64b5f6';
 });
 }
 }).then(function(canvas){
