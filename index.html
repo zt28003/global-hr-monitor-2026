@@ -372,7 +372,15 @@ html2canvas(document.body,{
 backgroundColor:'#0c1929',
 scale:2,
 useCORS:true,
-logging:false
+logging:false,
+onclone:function(clonedDoc){
+// html2canvas 瀵?CSS linear-gradient 娓叉煋鏈夊亸宸紝鎴浘鏃舵浛鎹负绾壊鑳屾櫙
+var h=clonedDoc.querySelector('.header');
+if(h)h.style.background='rgba(25,55,105,.75)';
+clonedDoc.querySelectorAll('.kpi-card').forEach(function(c){
+c.style.background='rgba(22,42,75,.55)';
+});
+}
 }).then(function(canvas){
 btn.style.display='flex';
 var link=document.createElement('a');
